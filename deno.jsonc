@@ -1,0 +1,17 @@
+{
+	"lock": false,
+	"tasks": {
+		"cli": "deno run --allow-read src/cli.ts",
+		"write-names": "deno run --allow-net --allow-write scripts/writeNames.ts"
+	},
+	"imports": {},
+	"fmt": {
+		"semiColons": false,
+		"useTabs": true,
+		"lineWidth": 120,
+		"indentWidth": 4,
+		"singleQuote": true,
+		"proseWrap": "preserve",
+		"exclude": []
+	}
+}
