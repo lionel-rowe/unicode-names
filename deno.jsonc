@@ -1,8 +1,8 @@
 {
 	"lock": false,
 	"tasks": {
-		"cli": "deno run --allow-read src/cli.ts",
-		"write-names": "deno run --allow-net --allow-write scripts/writeNames.ts"
+		"cli": "deno run -A src/cli.ts",
+		"build": "deno run --allow-net --allow-write scripts/build.ts"
 	},
 	"imports": {},
 	"fmt": {

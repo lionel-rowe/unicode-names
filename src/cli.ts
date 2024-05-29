@@ -1,12 +1,11 @@
-import { gunzip, type Rle, UnicodeNames } from './mod.ts'
+import { getUnicodeNames } from './mod.ts'
 
-const names: Rle = await gunzip(await Deno.readFile('./data/unicode-15.1.0-names.json.gz')).json()
-const _control: Record<number, string[]> = await gunzip(
-	await Deno.readFile('./data/unicode-15.1.0-names-control.json.gz'),
-).json()
-const control: Record<number, string> = Object.fromEntries(Object.entries(_control).map(([k, v]) => [k, v[0]]))
+const [names, control] = await Promise.all([
+	'./data/unicode-15.1.0-names.json.gz',
+	'./data/unicode-15.1.0-names-control.json.gz',
+].map((path) => Deno.readFile(path)))
 
-const unicodeNames = new UnicodeNames(names, { overrides: [control] })
+const unicodeNames = await getUnicodeNames({ names, control })
 
 while (true) {
 	await Deno.stdout.write(new TextEncoder().encode('Input string: '))
