@@ -9,8 +9,8 @@ export type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, numbe
  * @example Deno
  * ```ts
  * const [names, control] = await Promise.all([
- * 	'./data/unicode-15.1.0-names.json.gz',
- * 	'./data/unicode-15.1.0-names-control.json.gz',
+ * 	'./data/unicode-16.0.0-names.json.gz',
+ * 	'./data/unicode-16.0.0-names-control.json.gz',
  * ].map((path) => Deno.readFile(path)))
  *
  * const unicodeNames = await getUnicodeNames({ names, control })
@@ -19,8 +19,8 @@ export type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, numbe
  * @example NodeJS
  * ```ts
  * const [names, control] = await Promise.all([
- * 	'./data/unicode-15.1.0-names.json.gz',
- * 	'./data/unicode-15.1.0-names-control.json.gz',
+ * 	'./data/unicode-16.0.0-names.json.gz',
+ * 	'./data/unicode-16.0.0-names-control.json.gz',
  * ].map((path) => fs.promises.readFile(path)))
  *
  * const unicodeNames = await getUnicodeNames({ names, control })
@@ -29,8 +29,8 @@ export type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, numbe
  * @example Browser
  * ```ts
  * const [names, control] = await Promise.all([
- * 	'./assets/unicode-names/unicode-15.1.0-names.json.gz',
- * 	'./assets/unicode-names/unicode-15.1.0-names-control.json.gz',
+ * 	'./assets/unicode-names/unicode-16.0.0-names.json.gz',
+ * 	'./assets/unicode-names/unicode-16.0.0-names-control.json.gz',
  * ].map((path) => fetch(new URL(path, location.origin)).then((res) => res.blob())))
  *
  * const unicodeNames = await getUnicodeNames({ names, control })
@@ -50,7 +50,7 @@ function gunzip(data: Blob | BufferSource) {
 	)
 }
 
-// modified from https://github.com/node-unicode/unicode-15.1.0/blob/main/decode-property-map.js
+// modified from https://github.com/node-unicode/unicode-16.0.0/blob/main/decode-property-map.js
 function* generateEntries(runs: Rle): Generator<readonly [number, string], undefined, undefined> {
 	const len = runs.length - 2
 	let cp = 0

@@ -1,4 +1,4 @@
-const UNICODE_VERSION = '15.1.0'
+const UNICODE_VERSION = '16.0.0'
 const subPaths = ['Names', 'Names/Control']
 
 for (const subPath of subPaths) {

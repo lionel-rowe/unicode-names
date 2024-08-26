@@ -1,8 +1,8 @@
 import { getUnicodeNames } from './mod.ts'
 
 const [names, control] = await Promise.all([
-	'./data/unicode-15.1.0-names.json.gz',
-	'./data/unicode-15.1.0-names-control.json.gz',
+	'./data/unicode-16.0.0-names.json.gz',
+	'./data/unicode-16.0.0-names-control.json.gz',
 ].map((path) => Deno.readFile(path)))
 
 const unicodeNames = await getUnicodeNames({ names, control })
