@@ -1,4 +1,4 @@
-import { gunzip, type Streamable } from './_gzip.ts'
+import { gunzip, type Streamable, toReadableStream } from './_gzip.ts'
 import type { UnicodeVersion } from './types.ts'
 export type * from './types.ts'
 
@@ -32,7 +32,17 @@ type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, number, stri
  * ```
  */
 export async function getUnicodeNames(bin: Streamable | Promise<Streamable>): Promise<UnicodeNames> {
-	const x = await gunzip(await bin).json()
+	let res: Response
+	const [s1, s2] = new Response(toReadableStream(await bin)).body!.tee()
+	try {
+		res = new Response(await gunzip(s1).blob())
+	} catch {
+		// some build tools may automatically gunzip the file, so we handle that gracefully
+		res = new Response(s2)
+	}
+
+	const x = await res.json()
+
 	const unicodeVersion: UnicodeVersion = x.meta.unicodeVersion
 	const runs: Rle = x.runs
 
