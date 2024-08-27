@@ -9,7 +9,7 @@
 		"test-write-data": "INCLUDE_WRITE_DATA_TESTS=1 deno test -A src/writeData.test.ts"
 	},
 	"name": "@li/unicode-names",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"exports": {
 		".": "./src/mod.ts",
 		"./cli": "./src/cli.ts",

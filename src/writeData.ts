@@ -1,4 +1,4 @@
-import { join } from '@std/path'
+import { resolve } from '@std/path'
 import { exists } from '@std/fs'
 import type { UnicodeVersion } from './types.ts'
 import { COMMIT_HASHES } from './_commits.ts'
@@ -24,7 +24,9 @@ import { isUnicodeVersion, UNICODE_VERSIONS } from './_versions.ts'
  * await writeUnicodeNameDataFile('16.0.0', './data')
  * ```
  */
-export async function writeUnicodeNameDataFile(unicodeVersion: UnicodeVersion, dirPath: string) {
+export async function writeUnicodeNameDataFile(unicodeVersion: UnicodeVersion, dirPath: string): Promise<{
+	path: string
+}> {
 	if (!await exists(dirPath)) {
 		throw new Error(`Directory does not exist: ${dirPath}`)
 	}
@@ -39,8 +41,10 @@ export async function writeUnicodeNameDataFile(unicodeVersion: UnicodeVersion, d
 	const commit = COMMIT_HASHES[unicodeVersion]
 	const json = gzip(Response.json({ meta: { unicodeVersion, commit }, runs, overrides }))
 
-	const targetPath = join(dirPath, `unicode-${unicodeVersion}-names.json.gz`)
-	await Deno.writeFile(targetPath, json.body!)
+	const path = resolve(dirPath, `unicode-${unicodeVersion}-names.json.gz`)
+	await Deno.writeFile(path, json.body!)
+
+	return { path }
 }
 
 async function getUnzippedJson(v: UnicodeVersion, subPath: string) {
@@ -64,5 +68,7 @@ if (import.meta.main) {
 		throw new Error(`Invalid Unicode version: ${unicodeVersion}. Must be one of ${UNICODE_VERSIONS.join(', ')}`)
 	}
 
-	await writeUnicodeNameDataFile(unicodeVersion, dirPath)
+	const { path } = await writeUnicodeNameDataFile(unicodeVersion, dirPath)
+
+	console.info(`Wrote to ${path}`)
 }
