@@ -1,17 +1,20 @@
 import { getUnicodeNames } from './mod.ts'
 
-const [names, control] = await Promise.all([
-	'./data/unicode-16.0.0-names.json.gz',
-	'./data/unicode-16.0.0-names-control.json.gz',
-].map((path) => Deno.readFile(path)))
+/**
+ * @module
+ * Basic CLI app for getting Unicode names from code points.
+ */
 
-const unicodeNames = await getUnicodeNames({ names, control })
+const unicodeNames = await getUnicodeNames(
+	Deno.readFile(new URL('../data/unicode-16.0.0-names.json.gz', import.meta.url)),
+)
 
 while (true) {
 	await Deno.stdout.write(new TextEncoder().encode('Input string: '))
 	const u = new Uint8Array(1024)
 	await Deno.stdin.read(u)
-	let str = new TextDecoder().decode(u).replace(/\n?\0+/, '')
+	const originalStr = new TextDecoder().decode(u).replace(/\0*$/, '')
+	let str = originalStr.replace(/\n$/, '')
 	try {
 		str = JSON.parse(`"${
 			str
@@ -35,6 +38,8 @@ while (true) {
 			}`,
 		)
 	}
+
+	if (!originalStr.length) console.info()
 }
 
 function codePointToJsonEscaped(cp: number) {

@@ -1,53 +1,47 @@
-// evaluates to `readonly (string | number)[]` as typescript can't currently represent this kind of type more granularly
-export type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, number, string]>>>
+import { gunzip, type Streamable } from './_gzip.ts'
+import type { UnicodeVersion } from './types.ts'
+export type * from './types.ts'
 
 /**
- * @param bin - The binary source data for `names` and `control`, e.g. as a `Uint8Array` or NodeJS `Buffer` read from
- * disk or a blob fetched via HTTP request. Source data must be gzipped and RLE-encoded JSON, as built with
- * `scripts/build.ts` and found in the `data` directory of this repo.
+ * @module
+ * Get Unicode names from code points.
+ */
+
+// evaluates to `readonly (string | number)[]` as typescript can't currently represent this kind of type more granularly
+type Rle = Readonly<ReturnType<typeof Array.prototype.flat<[number, number, string]>>>
+
+/**
+ * Extracts the Unicode name data from the given binary data and returns a `UnicodeNames` object for querying it.
  *
- * @example Deno
+ * @param unicodeVersion The Unicode version to fetch the data for.
+ * @param fetchFile A function that takes a file name and returns a `Blob` object.
+ * @returns A `UnicodeNames` object.
+ *
+ * @example
  * ```ts
- * const [names, control] = await Promise.all([
- * 	'./data/unicode-16.0.0-names.json.gz',
- * 	'./data/unicode-16.0.0-names-control.json.gz',
- * ].map((path) => Deno.readFile(path)))
+ * import { getUnicodeNames, fetchByBaseUrl } from '@li/unicode-names'
  *
- * const unicodeNames = await getUnicodeNames({ names, control })
- * ```
+ * const unicodeNames = await getUnicodeNames(
+ * 	fetch(
+ * 		import.meta.resolve('/path/to/data/unicode-16.0.0-names.json.gz'),
+ * 		{ cache: 'force-cache' },
+ * 	),
+ * )
  *
- * @example NodeJS
- * ```ts
- * const [names, control] = await Promise.all([
- * 	'./data/unicode-16.0.0-names.json.gz',
- * 	'./data/unicode-16.0.0-names-control.json.gz',
- * ].map((path) => fs.promises.readFile(path)))
- *
- * const unicodeNames = await getUnicodeNames({ names, control })
- * ```
- *
- * @example Browser
- * ```ts
- * const [names, control] = await Promise.all([
- * 	'./assets/unicode-names/unicode-16.0.0-names.json.gz',
- * 	'./assets/unicode-names/unicode-16.0.0-names-control.json.gz',
- * ].map((path) => fetch(new URL(path, location.origin)).then((res) => res.blob())))
- *
- * const unicodeNames = await getUnicodeNames({ names, control })
+ * unicodeNames.getByCodePoint('💩'.codePointAt(0)!) // 'PILE OF POO'
  * ```
  */
-export async function getUnicodeNames(bin: { names: Blob | BufferSource; control: Blob | BufferSource }) {
-	const names: Rle = await gunzip(bin.names).json()
-	const _control: Record<number, string[]> = await gunzip(bin.control).json()
-	const control: Record<number, string> = Object.fromEntries(Object.entries(_control).map(([k, v]) => [k, v[0]]))
+export async function getUnicodeNames(bin: Streamable | Promise<Streamable>): Promise<UnicodeNames> {
+	const x = await gunzip(await bin).json()
+	const unicodeVersion: UnicodeVersion = x.meta.unicodeVersion
+	const runs: Rle = x.runs
 
-	return new UnicodeNames(names, { overrides: [control] })
-}
+	const _overrides: Record<number, string[]>[] = x.overrides
+	const overrides: Record<number, string>[] = _overrides.map((o) => {
+		return Object.fromEntries(Object.entries(o).map(([k, [preferredName]]) => [k, preferredName]))
+	})
 
-function gunzip(data: Blob | BufferSource) {
-	return new Response(
-		new Blob([data]).stream().pipeThrough(new DecompressionStream('gzip')),
-	)
+	return new UnicodeNames({ unicodeVersion, runs, overrides })
 }
 
 // modified from https://github.com/node-unicode/unicode-16.0.0/blob/main/decode-property-map.js
@@ -67,16 +61,22 @@ function* generateEntries(runs: Rle): Generator<readonly [number, string], undef
 	}
 }
 
-type Options = { overrides: readonly Record<number, string>[] }
-
-export class UnicodeNames {
+class UnicodeNames {
 	#map: Map<number, string>
 	#generator: Generator<readonly [number, string], undefined, undefined>
+	unicodeVersion: UnicodeVersion
 
-	constructor(runs: Rle, options?: Partial<Options>) {
+	constructor(
+		{ unicodeVersion, runs, overrides }: {
+			unicodeVersion: UnicodeVersion
+			runs: Rle
+			overrides: readonly Record<number, string>[]
+		},
+	) {
 		this.#map = new Map<number, string>()
+		this.unicodeVersion = unicodeVersion
 
-		for (const override of options?.overrides ?? []) {
+		for (const override of overrides ?? []) {
 			for (const [k, v] of Object.entries(override)) {
 				this.#map.set(Number(k), v)
 			}
@@ -103,23 +103,25 @@ export class UnicodeNames {
 	}
 	async #populateMapAsync(codePoint: number): Promise<void> {
 		while (true) {
-			await Promise.resolve()
+			await Promise.resolve() // yield to event loop
 			const cp = this.#next()
 			if (cp == null || cp >= codePoint) break
 		}
 	}
-
-	getMap() {
+	getMap(): Map<number, string> {
 		this.#populateMap(Infinity)
 		return this.#map
 	}
-	async getMapAsync() {
+	async getMapAsync(): Promise<Map<number, string>> {
 		await this.#populateMapAsync(Infinity)
 		return this.#map
 	}
-
-	getByCodePoint(codePoint: number): string | null {
+	getByCodePoint(codePoint: number): string | undefined {
 		this.#populateMap(codePoint)
-		return this.#map.get(codePoint) ?? null
+		return this.#map.get(codePoint)
+	}
+	async getByCodePointAsync(codePoint: number): Promise<string | undefined> {
+		await this.#populateMapAsync(codePoint)
+		return this.#map.get(codePoint)
 	}
 }
