@@ -51,7 +51,7 @@ unicodeNames.getByCodePoint('💩'.codePointAt(0)!) // 'PILE OF POO'
 ### Interactive CLI
 
 ```sh
-deno run -R jsr:@li/unicode-names/cli
+deno run -N jsr:@li/unicode-names/cli
 
 Input string: Hello, 🌍!
 "H" (U+0048): LATIN CAPITAL LETTER H
