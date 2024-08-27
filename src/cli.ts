@@ -6,7 +6,7 @@ import { getUnicodeNames } from './mod.ts'
  */
 
 const unicodeNames = await getUnicodeNames(
-	Deno.readFile(new URL('../data/unicode-16.0.0-names.json.gz', import.meta.url)),
+	fetch(new URL('../data/unicode-16.0.0-names.json.gz', import.meta.url)),
 )
 
 while (true) {

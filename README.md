@@ -12,22 +12,38 @@ Like `Names` module from https://github.com/node-unicode/unicode-16.0.0 but with
 ```sh
 mkdir -p ./path/to/data
 # writes to ./path/to/data/unicode-16.0.0-names.json.gz
-deno run -RWN @li/unicode-names/write-data 16.0.0 ./path/to/data
+deno run -RWN jsr:@li/unicode-names/write-data 16.0.0 ./path/to/data
 ```
 
 ### API
 
-`getUnicodeNames` takes binary data from a `Response`, `Blob`, `ArrayBuffer`, or `Uint8Array` (or a promise for any of those) and returns a `UnicodeNames` object which can be used to query the Unicode name data.
+First, fetch the data you just downloaded (you can also fetch remotely). For example:
+
+**Browser**
 
 ```ts
-import { fetchByBaseUrl, getUnicodeNames } from '@li/unicode-names'
+const dataPromise = fetch(new URL('./path/to/data/unicode-16.0.0-names.json.gz', window.location.origin))
+```
 
-const unicodeNames = await getUnicodeNames(
-    fetch(
-        import.meta.resolve('./path/to/data/unicode-16.0.0-names.json.gz'),
-        { cache: 'force-cache' },
-    ),
-)
+**Deno**
+
+```ts
+const dataPromise = Deno.readFile('./path/to/data/unicode-16.0.0-names.json.gz')
+```
+
+**Node**
+
+```ts
+import { readFile } from 'node:fs/promises'
+const dataPromise = readFile('./path/to/data/unicode-16.0.0-names.json.gz')
+```
+
+Then, use `getUnicodeNames` to get a `UnicodeNames` object, which can be used to query the Unicode name data.
+
+```ts
+import { getUnicodeNames } from '@li/unicode-names'
+
+const unicodeNames = await getUnicodeNames(dataPromise)
 
 unicodeNames.getByCodePoint('💩'.codePointAt(0)!) // 'PILE OF POO'
 ```
@@ -35,7 +51,7 @@ unicodeNames.getByCodePoint('💩'.codePointAt(0)!) // 'PILE OF POO'
 ### Interactive CLI
 
 ```sh
-deno run -R @li/unicode-names/cli
+deno run -R jsr:@li/unicode-names/cli
 
 Input string: Hello, 🌍!
 "H" (U+0048): LATIN CAPITAL LETTER H
