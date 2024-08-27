@@ -1,7 +1,7 @@
 export type Streamable = Blob | ArrayBuffer | Uint8Array | Response | ReadableStream<Uint8Array>
 
 export function toReadableStream(data: Streamable): ReadableStream<Uint8Array> {
-	return data instanceof ReadableStream ? data : data instanceof Response ? data.body! : new Blob([data]).stream()
+	return data instanceof ReadableStream ? data : data instanceof Response ? data.body! : new Response(data).body!
 }
 
 function convert(C: new (x: CompressionFormat) => GenericTransformStream) {
