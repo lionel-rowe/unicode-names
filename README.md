@@ -1,4 +1,4 @@
-# Unicode Names
+# Unicode Names [![JSR](https://jsr.io/badges/@li/unicode-names)](https://jsr.io/@li/unicode-names)
 
 Like `Names` module from https://github.com/node-unicode/unicode-16.0.0 but with the following changes:
 * No runtime dependencies — no reliance on Node APIs or `zlib`, so works in browsers out-of-the-box. Gzip is handled by native `CompressionStream` and `DecompressionStream` APIs.
