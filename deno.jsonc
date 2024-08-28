@@ -1,15 +1,14 @@
 {
 	"lock": false,
 	"tasks": {
-		"cli": "deno run -N src/cli.ts",
+		"cli": "deno run -RN src/cli.ts",
 		"build": "deno run -RWN src/_updateAllDataFiles.ts",
 		"update-commit-hashes": "deno run -A src/_updateUnicodeCommitHashes.ts",
 		"test": "deno test -A",
-		"write-data": "deno run -RWN src/writeData.ts",
-		"test-write-data": "INCLUDE_WRITE_DATA_TESTS=1 deno test -A src/writeData.test.ts"
+		"write-data": "deno run -RWN src/writeData.ts"
 	},
 	"name": "@li/unicode-names",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"exports": {
 		".": "./src/mod.ts",
 		"./cli": "./src/cli.ts",

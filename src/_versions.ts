@@ -1,4 +1,10 @@
-import type { UnicodeVersion } from './types.ts'
+/**
+ * The Unicode version to use.
+ */
+export type UnicodeVersion = `${bigint}.${bigint}.${bigint}`
 
-export const UNICODE_VERSIONS = ['16.0.0', '15.1.0'] as const
-export const isUnicodeVersion = (v: string): v is UnicodeVersion => UNICODE_VERSIONS.includes(v as UnicodeVersion)
+export const UNICODE_VERSION_REGEX = /^\d+\.\d+\.\d+$/i
+
+export function isUnicodeVersion(v: string | undefined | null): v is UnicodeVersion {
+	return UNICODE_VERSION_REGEX.test(v ?? '')
+}

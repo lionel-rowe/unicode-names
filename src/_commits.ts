@@ -1,6 +1,37 @@
-import type { UnicodeVersion } from './types.ts'
+// Generated via src/_updateUnicodeCommitHashes.ts. Do not edit manually.
+import type { UnicodeVersion } from './_versions.ts'
 
-export const COMMIT_HASHES: Record<UnicodeVersion, string> = {
-	'16.0.0': '4f52237d3510018b669e5991ed02f5f952649b62',
+export const COMMIT_HASHES: Partial<Record<UnicodeVersion, string>> = {
+	'1.1.5': '1d16d4058eddb10076222be0f8a2bfa7ffa60167',
+	'2.0.14': 'b7261ad6bc3be5e6ad718d5e0710a1dd5807862f',
+	'2.1.2': 'b4374729326d21131d62297d295c63f4cfdf89f8',
+	'2.1.5': 'a658fefa1324310e79f9c0bfe56965bd0c0e8822',
+	'2.1.8': 'daf3beb9bdd171d4dda1e756eb47e4e938b0c853',
+	'2.1.9': '49eadc7066e6963e8f791146cc67afe2420efa21',
+	'3.0.0': '86f882386917e1530d2f775b9e51b2cec2c47193',
+	'3.0.1': '684dd6a51e2d278882ecd7847ee609267970e88b',
+	'3.1.0': 'eb51cb651a6ef6d66736135ace752485beb25cd0',
+	'3.2.0': '59dc8c9e35bfceda8c255d0de4e0f9c7ad355008',
+	'4.0.0': 'c9791289bbce124b9d61461ee2364045196d0cae',
+	'4.0.1': '7fe405c0378d9ecaf21f726540ddb0365b7fdf3c',
+	'4.1.0': '5382beba5df9e3dbaefb7f5f2063844419ee9a22',
+	'5.0.0': '2b6b45b775019bcd3829dc4a4e7d2135f69acf45',
+	'5.1.0': '262fcb143ab250acae616017d277c255565ca03e',
+	'5.2.0': '64325c8f4d8b20b1da9835b7198b379dc4c78147',
+	'6.0.0': 'e6f74503a814f3fcc2cb62b236cbce1fdffe6d6f',
+	'6.1.0': 'a2d22d66a04747faaf505055c2d96c672f721e1a',
+	'6.2.0': '782e557f554c3ecad1f4a102de9f35260a13bc9a',
+	'6.3.0': '00a35de4c7dee135d1053bad4e20fd0ebc09a4c3',
+	'7.0.0': '5315951469eb76f546cc80d8c3d81ebcf29b8672',
+	'8.0.0': '56b8048ac8cd2afc7c090a5e8d1e7c1168a93bcc',
+	'9.0.0': '8ec2d9d6d878caa9b1b4dfc9acb1fa66dd9534c5',
+	'10.0.0': '6eb21e5278d33c739e83298796cdf8d8f46a7b08',
+	'11.0.0': '3c6177f82a4aef366cfac8020e1a4e540545ff25',
+	'12.0.0': 'e27dcef3f368f811de6a059876465520cf6df7b8',
+	'12.1.0': '62ebfefe443535586f967769e018963b2642fb20',
+	'13.0.0': '43bb4b7b22c54ef37307f20131d2d86e1556db45',
+	'14.0.0': '81e7bf8180c9d99e13b5eb0967bfd1ccd98d6af4',
+	'15.0.0': 'ccbeb4d36f3a9e6e177389aae1c71389482e124e',
 	'15.1.0': '15092e26549c05084aff0bc8e82676d3e0d7b4b0',
+	'16.0.0': '4f52237d3510018b669e5991ed02f5f952649b62',
 }

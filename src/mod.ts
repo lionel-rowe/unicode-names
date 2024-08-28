@@ -1,6 +1,5 @@
 import { gunzip, type Streamable, toReadableStream } from './_gzip.ts'
-import type { UnicodeVersion } from './types.ts'
-export type * from './types.ts'
+import type { UnicodeVersion } from './_versions.ts'
 
 /**
  * @module
