@@ -15,8 +15,15 @@
 		"./write-data": "./src/writeData.ts"
 	},
 	"imports": {
+		"@cliffy/command": "jsr:@cliffy/command@1.0.0-rc.5",
+		"@cliffy/keycode": "jsr:@cliffy/keycode@1.0.0-rc.7",
+		"@cliffy/keypress": "jsr:@cliffy/keypress@1.0.0-rc.7",
+		"@cliffy/prompt": "jsr:@cliffy/prompt@1.0.0-rc.7",
+		"@cliffy/table": "jsr:@cliffy/table@1.0.0-rc.7",
+		"@li/regexp-escape-polyfill": "jsr:@li/regexp-escape-polyfill@^0.3.4",
 		"@li/unicode-names": "./src/mod.ts",
 		"@std/assert": "jsr:@std/assert@^1.0.3",
+		"@std/fmt": "jsr:@std/fmt@^1.0.3",
 		"@std/fs": "jsr:@std/fs@^1.0.2",
 		"@std/path": "jsr:@std/path@^1.0.3"
 	},
